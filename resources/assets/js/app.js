@@ -18,5 +18,33 @@ window.Vue = require('vue');
 Vue.component('example-component', require('./components/ExampleComponent.vue'));
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    data:{
+        subjects:[
+            {name:'General Math', number:98},
+            {name:'Biology', number:97},
+            {name:'Higher Math', number:96},
+        ],
+        newSubject: ''
+    },
+    computed:{
+        total(){
+            var total = 0
+            this.subjects.forEach(subject=>{
+                total+=parseFloat(subject.number)
+            })
+            return total
+        }
+    },
+    methods:{
+        addSubject(){
+            this.subjects.push({
+                name: this.newSubject,
+                number: 40
+            })
+        },
+        removeSubject(index){
+            this.subjects.splice(index, 1)
+        }
+    }	
 });

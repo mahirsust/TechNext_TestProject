@@ -3,11 +3,11 @@
 <head>
     <title>Vue Data</title>
     <link rel="shortcut icon" type="image/png" href="img.ico">
-    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css">
     <style>
         .content {
-            padding-top: 10%;
+            padding-top: 5%;
             margin-left: 31%;
         }
     </style>
@@ -21,6 +21,7 @@
             <span class="navbar-toggler-icon"></span>
         </button>
     </nav>
+
     <div id="app" class="container">
         
         <div class="row">
@@ -43,39 +44,7 @@
             </div>
         </div>
     </div>
-
-    <script>
-        new Vue({
-            el: '#app',
-            data:{
-                subjects:[
-                    {name:'General Math', number:98},
-                    {name:'Biology', number:97},
-                    {name:'Higher Math', number:96},
-                ],
-                newSubject: ''
-            },
-            computed:{
-                total(){
-                    var total = 0
-                    this.subjects.forEach(subject=>{
-                        total+=parseFloat(subject.number)
-                    })
-                    return total
-                }
-            },
-            methods:{
-                addSubject(){
-                    this.subjects.push({
-                        name: this.newSubject,
-                        number: 40
-                    })
-                },
-                removeSubject(index){
-                    this.subjects.splice(index, 1)
-                }
-            }
-        })
-    </script>
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
 </body>
 </html>
