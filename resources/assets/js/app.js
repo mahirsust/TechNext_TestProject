@@ -6,8 +6,21 @@
  */
 
 require('./bootstrap');
+import Vue from 'vue'
+import BootstrapVue from 'bootstrap-vue'
 
+Vue.use(BootstrapVue);
+import 'bootstrap/dist/css/bootstrap.css'
+import 'bootstrap-vue/dist/bootstrap-vue.css'
 window.Vue = require('vue');
+
+let token = document.head.querySelector('meta[name="csrf-token"]');
+
+if (token) {
+    window.axios.defaults.headers.common['X-CSRF-TOKEN'] = token.content;
+} else {
+    console.error('CSRF token not found: https://laravel.com/docs/csrf#csrf-x-csrf-token');
+}
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -15,7 +28,7 @@ window.Vue = require('vue');
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
-Vue.component('example-component', require('./components/ExampleComponent.vue'));
+/*Vue.component('example-component', require('./components/ExampleComponent.vue'));*/
 
 const app = new Vue({
     el: '#app',
@@ -25,7 +38,8 @@ const app = new Vue({
             {name:'Biology', number:97},
             {name:'Higher Math', number:96},
         ],
-        newSubject: ''
+        newSubject: '',
+        newNumber:''
     },
     computed:{
         total(){
@@ -40,7 +54,7 @@ const app = new Vue({
         addSubject(){
             this.subjects.push({
                 name: this.newSubject,
-                number: 40
+                number: this.newNumber,
             })
         },
         removeSubject(index){
