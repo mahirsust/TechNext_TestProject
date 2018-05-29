@@ -12,5 +12,10 @@
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    //return redirect('/marksheet'); // Why redirect? single page to
+    // single project hoile ki api er link ei kaj korte hbe naki. view single, so sei vie page ta to lagbe
+	return view('welcome');
 });
+Route::get('/marksheet', 'DatasetController@index');
+
+Route::post('/add', 'DatasetController@store');

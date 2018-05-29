@@ -12,8 +12,10 @@
     </script>
     <title>Vue Js</title>
     <link rel="shortcut icon" type="image/png" href="img.ico">
-    <!-- <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script> -->
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.0.0-rc.11/dist/bootstrap-vue.common.min.js">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.0.0-rc.11/dist/bootstrap-vue.common.min.js"></script> -->
+    <link href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" rel="stylesheet"/>
+
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" >
     <!-- <style>
         .content {
@@ -32,20 +34,21 @@
         </button>
     </nav>
 
-    <div id="app" class="container" style="margin-top: 20px;">
+    <div id="app" class="container" style="margin-top: 20px;" >
         
         <div class="row">
             <div class="col-md-12 content">
                 <h3 class="text-center">Data Table</h3>
 
                 <form @submit.prevent='addSubject' class="form-inline" style="padding-left: 300px; margin-top: 30px;">
+                    {{csrf_field()}}
                   <div class="form-group mb-2">
                     <label for="subject" class="sr-only">Subject</label>
-                    <input required type="text" class="form-control" id="subject" v-model="newSubject" placeholder="Mathematics">
+                    <input required type="text" class="form-control" name="subject" id="subject" v-model="newSubject" placeholder="Mathematics">
                   </div>
                   <div class="form-group mx-sm-3 mb-2">
                     <label for="mark" class="sr-only">Marks</label>
-                    <input required type="text" class="form-control" id="mark" v-model="newNumber" placeholder="98">
+                    <input required type="text" class="form-control" name="mark" id="mark" v-model="newNumber" placeholder="98">
                   </div>
                   <button class="btn btn-success mb-2" type="submit">Add</button>
                 </form>
@@ -66,16 +69,23 @@
                         <td>@{{subject.name}}</td>
                         <td>@{{subject.number}}</td>
                         <td>
-                            <button class="btn btn-sm btn-danger" @click="removeSubject(index)">
+                            <!-- <button class="btn btn-sm btn-danger" @click="removeSubject(index)">
                                 Delete
-                            </button>
-
-                            <b-btn v-b-modal.modal1 class="btn btn-sm btn-primary"  style="margin-left: 20px;">
+                            </button> -->
+                            <b-btn v-b-modal="modalId(index)"  class="btn btn-sm btn-danger">
+                                Delete
+                            </b-btn>
+                            <b-btn v-b-modal="modalId1(index)"  class="btn btn-sm btn-primary"  style="margin-left: 20px;">
                                 Edit
                             </b-btn>
-                            <!-- Modal Component -->
-                            <b-modal id="modal1" title="Bootstrap-Vue">
-                                <p class="my-4">Hello from modal!</p>
+                            
+                            <!-- Delete Modal Component -->
+                            <b-modal :id="'modal' + index" title="Delete Data">
+                                <h4 class="my-4 text-center">Are You Sure!</h4>
+                            </b-modal>
+                            <!-- Edit Modal Component -->
+                            <b-modal :id="'modal1' + index" title="Edit Data">
+                                <p class="my-4">Hello from modal1!</p>
                             </b-modal>
                         </td>
                     </tr>
@@ -83,7 +93,7 @@
                 </table>
 
                 <div class="alert alert-success text-center" role="alert">
-                  <h5 style="color: #000">Total Marks - @{{total}}</h5>
+                  <h5 style="color: #000">Total Marks - @{{total_number}}</h5>
                 </div>
             </div>
         </div>
