@@ -20750,14 +20750,13 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         pagination: {},
         offset: 5,
         formData: {},
-        editingFile: {},
-        deletingFile: {},
         notification: false,
         message: '',
         errors: {},
         loading: false,
         subjects: [],
-
+        editsubjectdata: '',
+        editnumberdata: '',
         newSubject: '',
         newNumber: '',
         total_number: ''
@@ -20813,11 +20812,6 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 _this.loading = false;
             });
         },
-        resetForm: function resetForm() {
-            this.formData = {};
-            this.newSubject = '';
-            this.newNumber = '';
-        },
 
         /*isCurrentPage(page) {
             return this.pagination.current_page === page;
@@ -20835,23 +20829,60 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 _this2.newSubject = '';
                 _this2.newNumber = '';
                 //console.log(response);
-                //this.resetForm();
                 //this.showNotification('Data successfully inserted!', true);
                 _this2.getData();
             }).catch(function (error) {
                 _this2.errors = error.response.data.errors;
                 //this.showNotification(error.response.data.message, false);
                 //this.getData(this.activeTab);
+                alert("Could not insert data");
             });
         },
         removeSubject: function removeSubject(index) {
-            this.subjects.splice(index, 1);
-        },
-        modalId: function modalId(i) {
-            return 'modal' + i;
+            var _this3 = this;
+
+            if (confirm("Do you really want to delete it?")) {
+
+                axios.post('/delete_data/' + index).then(function (response) {
+
+                    _this3.getData();
+                }).catch(function (error) {
+                    //this.errors = error.response.data.errors;
+                    alert("Could not delete data");
+                });
+            }
         },
         modalId1: function modalId1(i) {
             return 'modal1' + i;
+        },
+        saveAction: function saveAction(evt, index) {
+            // Prevent modal from closing
+            evt.preventDefault();
+            this.$refs.modal.submit();
+            this.editSubject(index);
+        },
+        editSubject: function editSubject(index) {
+            var _this4 = this;
+
+            this.formData = new FormData();
+            this.formData.append('editsubject', this.editsubjectdata);
+            this.formData.append('editnumber', this.editnumberdata);
+            //console.log(this.formData);
+            //this.formData.append('_token', csrf-token);
+            axios.post('/edit/' + index, this.formData).then(function (response) {
+                _this4.formData = {};
+                _this4.editsubjectdata = '';
+                _this4.editnumberdata = '';
+                //console.log(response);
+                //this.showNotification('Data successfully inserted!', true);
+                _this4.getData();
+                _this4.$refs.modal.hide();
+            }).catch(function (error) {
+                _this4.errors = error.response.data.errors;
+                //this.showNotification(error.response.data.message, false);
+                //this.getData(this.activeTab);
+                alert("Could not edit data");
+            });
         },
         showNotification: function showNotification(text, success) {
             if (success === true) {

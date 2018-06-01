@@ -19,3 +19,5 @@ Route::get('/', function () {
 Route::get('/marksheet', 'DatasetController@index');
 
 Route::post('/add', 'DatasetController@store');
+Route::post('/delete_data/{id}', 'DatasetController@destroy');
+Route::post('/edit/{id}', 'DatasetController@edit_data');

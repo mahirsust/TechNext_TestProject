@@ -34,7 +34,7 @@
         </button>
     </nav>
 
-    <div id="app" class="container" style="margin-top: 20px;" >
+    <div id="app" class="container" style="margin-top: 20px;">
         
         <div class="row">
             <div class="col-md-12 content">
@@ -64,7 +64,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    <tr v-for="(subject, index) in subjects" :key="index">
+                    <tr v-for="(subject, index) in subjects" :key="index" v-cloak>
                         <th scope="row">@{{index+1}}</th>
                         <td>@{{subject.name}}</td>
                         <td>@{{subject.number}}</td>
@@ -72,27 +72,40 @@
                             <!-- <button class="btn btn-sm btn-danger" @click="removeSubject(index)">
                                 Delete
                             </button> -->
-                            <b-btn v-b-modal="modalId(index)"  class="btn btn-sm btn-danger">
+                            <b-btn @click="removeSubject(subject.id)"  class="btn btn-sm btn-danger">
                                 Delete
                             </b-btn>
-                            <b-btn v-b-modal="modalId1(index)"  class="btn btn-sm btn-primary"  style="margin-left: 20px;">
+                            <b-btn v-b-modal="modalId1(index)" title="Edit Data"
+                             class="btn btn-sm btn-primary"  style="margin-left: 20px;">
                                 Edit
                             </b-btn>
                             
-                            <!-- Delete Modal Component -->
-                            <b-modal :id="'modal' + index" title="Delete Data">
-                                <h4 class="my-4 text-center">Are You Sure!</h4>
-                            </b-modal>
                             <!-- Edit Modal Component -->
-                            <b-modal :id="'modal1' + index" title="Edit Data">
-                                <p class="my-4">Hello from modal1!</p>
+                            <b-modal :id="'modal1' + index" :key="index" ref="modal" title="Edit Data"
+                                @ok="saveAction(subject.id)">
+                                <b-form @submit.stop.prevent="editSubject(subject.id)" method="post">
+                                    {{csrf_field()}}
+                                    <b-form-group id="SubjectInputGroup1" label="Subject:" 
+                                    label-for="SubjectInput">
+                                        <b-form-input id="SubjectInput" name="editsubject" type="text" 
+                                        v-model="editsubjectdata"
+                                            required :value="subject.name">
+                                        </b-form-input>
+                                    </b-form-group>
+                                    <b-form-group id="NumberInputGroup2" label="Number:" label-for="NumberInput">
+                                        <b-form-input id="NumberInput" name="editnumber" type="text" 
+                                        v-model="editnumberdata" 
+                                            required :value="subject.number">
+                                        </b-form-input>
+                                    </b-form-group>
+                                </b-form>
                             </b-modal>
                         </td>
                     </tr>
                   </tbody>
                 </table>
 
-                <div class="alert alert-success text-center" role="alert">
+                <div class="alert alert-success text-center" role="alert" v-cloak>
                   <h5 style="color: #000">Total Marks - @{{total_number}}</h5>
                 </div>
             </div>

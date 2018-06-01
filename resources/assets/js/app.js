@@ -36,14 +36,13 @@ const app = new Vue({
         pagination: {},
         offset: 5,
         formData: {},
-        editingFile: {},
-        deletingFile: {},
         notification: false,
         message: '',
         errors: {},
         loading: false,
         subjects:[],
-
+        editsubjectdata:'',
+        editnumberdata:'',
         newSubject: '',
         newNumber:'',
         total_number:''
@@ -105,11 +104,6 @@ const app = new Vue({
             });
 
         },
-        resetForm() {
-            this.formData = {};
-            this.newSubject = '';
-            this.newNumber = '';
-        },
         /*isCurrentPage(page) {
             return this.pagination.current_page === page;
         },*/
@@ -125,7 +119,6 @@ const app = new Vue({
                     this.newSubject = '';
                     this.newNumber = '';
                     //console.log(response);
-                    //this.resetForm();
                     //this.showNotification('Data successfully inserted!', true);
                     this.getData();
                 })
@@ -133,16 +126,54 @@ const app = new Vue({
                     this.errors = error.response.data.errors;
                     //this.showNotification(error.response.data.message, false);
                     //this.getData(this.activeTab);
+                    alert("Could not insert data")
                 });
         },
         removeSubject(index){
-            this.subjects.splice(index, 1)
-        },
-        modalId(i) {
-            return 'modal' + i;
+            if (confirm("Do you really want to delete it?")) {
+                    
+                    axios.post('/delete_data/' + index)
+                        .then(response => {
+                            
+                            this.getData();
+                        })
+                        .catch(error => {
+                            //this.errors = error.response.data.errors;
+                            alert("Could not delete data");
+                        });
+                }
         },
         modalId1(i) {
             return 'modal1' + i;
+        },
+        saveAction(evt, index) {
+          // Prevent modal from closing
+            evt.preventDefault();
+            this.$refs.modal.submit();
+            this.editSubject(index);
+        },
+        editSubject(index) {
+            this.formData = new FormData();
+            this.formData.append('editsubject', this.editsubjectdata);
+            this.formData.append('editnumber', this.editnumberdata);
+            //console.log(this.formData);
+            //this.formData.append('_token', csrf-token);
+            axios.post('/edit/' +  index, this.formData)
+                .then(response => {
+                    this.formData = {};
+                    this.editsubjectdata = '';
+                    this.editnumberdata = '';
+                    //console.log(response);
+                    //this.showNotification('Data successfully inserted!', true);
+                    this.getData();
+                    this.$refs.modal.hide();
+                })
+                .catch(error => {
+                    this.errors = error.response.data.errors;
+                    //this.showNotification(error.response.data.message, false);
+                    //this.getData(this.activeTab);
+                    alert("Could not edit data");
+                });  
         },
         showNotification(text, success) {
             if (success === true) {

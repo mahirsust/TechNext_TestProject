@@ -38,11 +38,6 @@ class DatasetController extends Controller
         return response()->json($response);
     }
 
-    /**
-     * Upload new file and store it
-     * @param  Request $request Request with form data: filename and file info
-     * @return boolean          True if success, otherwise - false
-     */
     public function store(Request $request)
     {
 
@@ -50,6 +45,22 @@ class DatasetController extends Controller
         $dataset->name = $request->subject;
         $dataset->number = $request->mark;
         $dataset->save();
+        return redirect('/');
+    }
+
+    public function destroy($id)
+    {
+        $dataset = Dataset::findOrFail($id);
+        $dataset->delete();
+        return redirect('/');
+    }
+
+    public function edit_data(Request $request, $id)
+    {
+        return $request;
+        $dataset = Dataset::findOrFail($id);
+        $dataset->update($request->all());
+ 
         return redirect('/');
     }
 }
