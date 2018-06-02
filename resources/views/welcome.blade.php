@@ -14,8 +14,7 @@
     <link rel="shortcut icon" type="image/png" href="img.ico">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.0.0-rc.11/dist/bootstrap-vue.common.min.js"></script> -->
-    <link href="https://unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" rel="stylesheet"/>
-
+    <link type="text/css" rel="stylesheet" href="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.css" />
     <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" rel="stylesheet" >
     <!-- <style>
         .content {
@@ -42,6 +41,7 @@
 
                 <form @submit.prevent='addSubject' class="form-inline" style="padding-left: 300px; margin-top: 30px;">
                     {{csrf_field()}}
+                    
                   <div class="form-group mb-2">
                     <label for="subject" class="sr-only">Subject</label>
                     <input required type="text" class="form-control" name="subject" id="subject" v-model="newSubject" placeholder="Mathematics">
@@ -69,36 +69,36 @@
                         <td>@{{subject.name}}</td>
                         <td>@{{subject.number}}</td>
                         <td>
-                            <!-- <button class="btn btn-sm btn-danger" @click="removeSubject(index)">
-                                Delete
-                            </button> -->
+                            
                             <b-btn @click="removeSubject(subject.id)"  class="btn btn-sm btn-danger">
                                 Delete
                             </b-btn>
-                            <b-btn v-b-modal="modalId1(index)" title="Edit Data"
-                             class="btn btn-sm btn-primary"  style="margin-left: 20px;">
+                            
+                            <b-btn v-b-modal="modalId1(index)" title="Edit Data" class="btn btn-sm"
+                             style="margin-left: 20px;">
                                 Edit
                             </b-btn>
-                            
-                            <!-- Edit Modal Component -->
-                            <b-modal :id="'modal1' + index" :key="index" ref="modal" title="Edit Data"
-                                @ok="saveAction(subject.id)">
-                                <b-form @submit.stop.prevent="editSubject(subject.id)" method="post">
-                                    {{csrf_field()}}
-                                    <b-form-group id="SubjectInputGroup1" label="Subject:" 
+
+                            <!-- Modal Component -->
+                            <b-modal :id="'modal1' + index" title="Edit Data" ok-title="Save"
+                             @ok="submitEditSubject(index)" @shown="editSubject(index)">
+
+                              <form @submit.stop.prevent="submit" method="post">
+                                {{csrf_field()}}
+                                <b-form-group id="SubjectInputGroup1" label="Subject:" 
                                     label-for="SubjectInput">
-                                        <b-form-input id="SubjectInput" name="editsubject" type="text" 
+                                        <b-form-input id="SubjectInput" type="text" 
                                         v-model="editsubjectdata"
-                                            required :value="subject.name">
+                                            required>
                                         </b-form-input>
                                     </b-form-group>
                                     <b-form-group id="NumberInputGroup2" label="Number:" label-for="NumberInput">
-                                        <b-form-input id="NumberInput" name="editnumber" type="text" 
+                                        <b-form-input id="NumberInput" type="text" 
                                         v-model="editnumberdata" 
-                                            required :value="subject.number">
+                                            required >
                                         </b-form-input>
                                     </b-form-group>
-                                </b-form>
+                              </form>
                             </b-modal>
                         </td>
                     </tr>
@@ -113,5 +113,9 @@
     </div>
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/vue/2.3.4/vue.min.js"></script>
+    <script src="//unpkg.com/babel-polyfill@latest/dist/polyfill.min.js"></script>
+    <script src="//unpkg.com/tether@latest/dist/js/tether.min.js"></script>
+    <script src="//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.js"></script>
 </body>
 </html>

@@ -55,9 +55,8 @@ class DatasetController extends Controller
         return redirect('/');
     }
 
-    public function edit_data(Request $request, $id)
+    public function edit_data($id, Request $request)
     {
-        return $request;
         $dataset = Dataset::findOrFail($id);
         $dataset->update($request->all());
  

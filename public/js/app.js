@@ -20747,41 +20747,23 @@ if (token) {
 var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
     el: '#app',
     data: {
-        pagination: {},
         offset: 5,
         formData: {},
-        notification: false,
         message: '',
-        errors: {},
         loading: false,
         subjects: [],
+        showModal: false,
         editsubjectdata: '',
-        editnumberdata: '',
+        editnumberdata: 0,
         newSubject: '',
         newNumber: '',
+        errors: [],
         total_number: ''
     },
     created: function created() {
         this.getData();
     },
-    computed: {
-        /*pages() {
-            let pages = [];
-             let from = this.pagination.current_page - Math.floor(this.offset / 2);
-             if (from < 1) {
-                from = 1;
-            }
-             let to = from + this.offset - 1;
-             if (to > this.pagination.last_page) {
-                to = this.pagination.last_page;
-            }
-             while (from <= to) {
-                pages.push(from);
-                from++;
-            }
-             return pages;
-        },*/
-    },
+    computed: {},
     methods: {
         total: function total() {
             var total = 0;
@@ -20798,43 +20780,29 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
                 _this.loading = false;
                 var self = _this;
                 self.subjects = [];
-                // console.log(result.data.data);
                 var receivedData = result.data.data;
                 receivedData.forEach(function (element) {
-                    //console.log(element)
                     self.subjects.push(element);
                 });
                 _this.total();
-                //this.pagination = result.data.pagination
-
             }).catch(function (error) {
                 console.log(error);
                 _this.loading = false;
             });
         },
-
-        /*isCurrentPage(page) {
-            return this.pagination.current_page === page;
-        },*/
-
         addSubject: function addSubject() {
             var _this2 = this;
 
             this.formData = new FormData();
             this.formData.append('subject', this.newSubject);
             this.formData.append('mark', this.newNumber);
-            //this.formData.append('_token', csrf-token);
             axios.post('/add', this.formData).then(function (response) {
                 _this2.formData = {};
                 _this2.newSubject = '';
                 _this2.newNumber = '';
-                //console.log(response);
-                //this.showNotification('Data successfully inserted!', true);
                 _this2.getData();
             }).catch(function (error) {
                 _this2.errors = error.response.data.errors;
-                //this.showNotification(error.response.data.message, false);
-                //this.getData(this.activeTab);
                 alert("Could not insert data");
             });
         },
@@ -20847,7 +20815,6 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
 
                     _this3.getData();
                 }).catch(function (error) {
-                    //this.errors = error.response.data.errors;
                     alert("Could not delete data");
                 });
             }
@@ -20855,67 +20822,28 @@ var app = new __WEBPACK_IMPORTED_MODULE_0_vue___default.a({
         modalId1: function modalId1(i) {
             return 'modal1' + i;
         },
-        saveAction: function saveAction(evt, index) {
-            // Prevent modal from closing
-            evt.preventDefault();
-            this.$refs.modal.submit();
-            this.editSubject(index);
-        },
         editSubject: function editSubject(index) {
+
+            this.editsubjectdata = this.subjects[index].name;
+            this.editnumberdata = this.subjects[index].number;
+        },
+        submitEditSubject: function submitEditSubject(index) {
             var _this4 = this;
 
-            this.formData = new FormData();
-            this.formData.append('editsubject', this.editsubjectdata);
-            this.formData.append('editnumber', this.editnumberdata);
-            //console.log(this.formData);
-            //this.formData.append('_token', csrf-token);
-            axios.post('/edit/' + index, this.formData).then(function (response) {
-                _this4.formData = {};
+            var data = {
+                name: this.editsubjectdata,
+                number: this.editnumberdata
+            };
+            axios.post('/edit/' + this.subjects[index].id, data).then(function (response) {
                 _this4.editsubjectdata = '';
-                _this4.editnumberdata = '';
-                //console.log(response);
-                //this.showNotification('Data successfully inserted!', true);
+                _this4.editnumberdata = 0;
                 _this4.getData();
-                _this4.$refs.modal.hide();
+                _this4.showModal = false;
+                alert('Successful');
             }).catch(function (error) {
-                _this4.errors = error.response.data.errors;
-                //this.showNotification(error.response.data.message, false);
-                //this.getData(this.activeTab);
-                alert("Could not edit data");
+                alert("Could not edit data\n Please fill data correctly");
             });
-        },
-        showNotification: function showNotification(text, success) {
-            if (success === true) {
-                this.clearErrors();
-            }
-
-            var application = this;
-            application.message = text;
-            application.notification = true;
-            setTimeout(function () {
-                application.notification = false;
-            }, 15000);
         }
-
-        /*changePage(page) {
-            if (page > this.pagination.last_page) {
-                page = this.pagination.last_page;
-            }
-            this.pagination.current_page = page;
-            this.fetchFile(this.activeTab, page);
-        },*/
-        /*
-                anyError() {
-                    return Object.keys(this.errors).length > 0;
-                },
-        
-                clearErrors() {
-                    this.errors = {};
-                }
-                mounted() {
-                this.fetchFile(this.pagination.current_page);
-                }*/
-
     }
 });
 

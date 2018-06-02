@@ -33,46 +33,23 @@ if (token) {
 const app = new Vue({
     el: '#app',
     data:{
-        pagination: {},
         offset: 5,
         formData: {},
-        notification: false,
         message: '',
-        errors: {},
         loading: false,
         subjects:[],
-        editsubjectdata:'',
-        editnumberdata:'',
+        showModal: false,
+        editsubjectdata: '',
+        editnumberdata:0,
         newSubject: '',
         newNumber:'',
+        errors:[],
         total_number:''
     },
     created: function() {
         this.getData();
     },
     computed: {
-        /*pages() {
-            let pages = [];
-
-            let from = this.pagination.current_page - Math.floor(this.offset / 2);
-
-            if (from < 1) {
-                from = 1;
-            }
-
-            let to = from + this.offset - 1;
-
-            if (to > this.pagination.last_page) {
-                to = this.pagination.last_page;
-            }
-
-            while (from <= to) {
-                pages.push(from);
-                from++;
-            }
-
-            return pages;
-        },*/
     },
     methods:{
         total(){
@@ -88,15 +65,11 @@ const app = new Vue({
                 this.loading = false;
                 var self = this;
                 self.subjects = [];
-                // console.log(result.data.data);
                 var receivedData = result.data.data;
                 receivedData.forEach(function(element) {
-                //console.log(element)
                 self.subjects.push(element)
                 })
                 this.total();
-                //this.pagination = result.data.pagination
-
 
             }).catch(error => {
                 console.log(error);
@@ -104,28 +77,19 @@ const app = new Vue({
             });
 
         },
-        /*isCurrentPage(page) {
-            return this.pagination.current_page === page;
-        },*/
-
         addSubject(){
             this.formData = new FormData();
             this.formData.append('subject', this.newSubject);
             this.formData.append('mark', this.newNumber);
-            //this.formData.append('_token', csrf-token);
             axios.post('/add', this.formData)
                 .then(response => {
                     this.formData = {};
                     this.newSubject = '';
                     this.newNumber = '';
-                    //console.log(response);
-                    //this.showNotification('Data successfully inserted!', true);
                     this.getData();
                 })
                 .catch(error => {
                     this.errors = error.response.data.errors;
-                    //this.showNotification(error.response.data.message, false);
-                    //this.getData(this.activeTab);
                     alert("Could not insert data")
                 });
         },
@@ -138,7 +102,6 @@ const app = new Vue({
                             this.getData();
                         })
                         .catch(error => {
-                            //this.errors = error.response.data.errors;
                             alert("Could not delete data");
                         });
                 }
@@ -146,66 +109,27 @@ const app = new Vue({
         modalId1(i) {
             return 'modal1' + i;
         },
-        saveAction(evt, index) {
-          // Prevent modal from closing
-            evt.preventDefault();
-            this.$refs.modal.submit();
-            this.editSubject(index);
-        },
         editSubject(index) {
-            this.formData = new FormData();
-            this.formData.append('editsubject', this.editsubjectdata);
-            this.formData.append('editnumber', this.editnumberdata);
-            //console.log(this.formData);
-            //this.formData.append('_token', csrf-token);
-            axios.post('/edit/' +  index, this.formData)
+            
+            this.editsubjectdata = this.subjects[index].name;
+            this.editnumberdata = this.subjects[index].number; 
+        },
+        submitEditSubject(index) {
+            var data = {
+                name: this.editsubjectdata,
+                number: this.editnumberdata
+            }
+            axios.post('/edit/' +  this.subjects[index].id, data)
                 .then(response => {
-                    this.formData = {};
                     this.editsubjectdata = '';
-                    this.editnumberdata = '';
-                    //console.log(response);
-                    //this.showNotification('Data successfully inserted!', true);
+                    this.editnumberdata = 0;
                     this.getData();
-                    this.$refs.modal.hide();
+                    this.showModal = false;
+                    alert('Successful');
                 })
                 .catch(error => {
-                    this.errors = error.response.data.errors;
-                    //this.showNotification(error.response.data.message, false);
-                    //this.getData(this.activeTab);
-                    alert("Could not edit data");
-                });  
-        },
-        showNotification(text, success) {
-            if (success === true) {
-                this.clearErrors();
-            }
-
-            var application = this;
-            application.message = text;
-            application.notification = true;
-            setTimeout(function() {
-                application.notification = false;
-            }, 15000);
+                    alert("Could not edit data\n Please fill data correctly");
+                });
         }
-
-
-        /*changePage(page) {
-            if (page > this.pagination.last_page) {
-                page = this.pagination.last_page;
-            }
-            this.pagination.current_page = page;
-            this.fetchFile(this.activeTab, page);
-        },*/
-/*
-        anyError() {
-            return Object.keys(this.errors).length > 0;
-        },
-
-        clearErrors() {
-            this.errors = {};
-        }
-        mounted() {
-        this.fetchFile(this.pagination.current_page);
-        }*/
     }
 });
