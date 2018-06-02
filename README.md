@@ -1,1 +1,1 @@
-It's a Data CRUD system that calculates Exam Result. using VueJs[2.3.4], Laravel[version 5.6], Bootstrap[version 4.0.0], Bootstrap-Vue.
+It's a Data CRUD system that calculates Exam Result.User can add a subject with its mark and edit and delete the entry.This system is developed using VueJs[version 2.3.4], Laravel[version 5.6], Bootstrap[version 4.0.0], Bootstrap-Vue.
