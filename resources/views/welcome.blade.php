@@ -10,7 +10,7 @@
     <script>
         window.Laravel = { csrfToken: '{{ csrf_token() }}' }
     </script>
-    <title>Vue Js</title>
+    <title>VueJs MarkSheet</title>
     <link rel="shortcut icon" type="image/png" href="img.ico">
     <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
     <!-- <script src="https://cdn.jsdelivr.net/npm/bootstrap-vue@2.0.0-rc.11/dist/bootstrap-vue.common.min.js"></script> -->
@@ -26,7 +26,7 @@
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
         <img src="{{url('images/logo/images.png')}}" class="rounded" width="30" height="30" alt="">
-        <a class="navbar-brand" href="{{url('/')}}" style="margin-left: 10px;">Vue js</a>
+        <a class="navbar-brand" href="{{url('/')}}" style="margin-left: 10px;">Vuejs MarkSheet</a>
         <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" 
           aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
@@ -37,7 +37,7 @@
         
         <div class="row">
             <div class="col-md-12 content">
-                <h3 class="text-center">Data Table</h3>
+                <h3 class="text-center">MarkSheet</h3>
 
                 <form @submit.prevent='addSubject' class="form-inline" style="padding-left: 300px; margin-top: 30px;">
                     {{csrf_field()}}
